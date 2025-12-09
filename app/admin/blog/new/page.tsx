@@ -1,4 +1,5 @@
 import { requireAdmin } from '@/lib/auth'
+export const dynamic = 'force-dynamic'
 import { BlogPostForm } from '@/components/admin/BlogPostForm'
 
 export default async function NewBlogPostPage() {

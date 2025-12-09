@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { formatPrice } from '@/lib/utils'
 import { AddToCartButton } from '@/components/AddToCartButton'
 
+export const dynamic = 'force-dynamic'
+
 export default async function ProductPage({
   params,
 }: {

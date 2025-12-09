@@ -4,6 +4,8 @@ import { redirect, notFound } from 'next/navigation'
 import { prisma } from '@/lib/db'
 import { formatPrice } from '@/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
 export default async function OrderDetailPage({
   params,
 }: {

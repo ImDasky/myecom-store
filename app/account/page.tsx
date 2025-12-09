@@ -1,4 +1,5 @@
 import { getStoreSettings } from '@/lib/settings'
+export const dynamic = 'force-dynamic'
 import { getCurrentUser, requireAdmin } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'

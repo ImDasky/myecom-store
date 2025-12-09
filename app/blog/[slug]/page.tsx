@@ -2,6 +2,8 @@ import { getStoreSettings } from '@/lib/settings'
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 
+export const dynamic = 'force-dynamic'
+
 export default async function BlogPostPage({
   params,
 }: {

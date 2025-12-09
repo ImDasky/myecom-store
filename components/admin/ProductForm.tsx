@@ -35,9 +35,16 @@ export function ProductForm({ product }: ProductFormProps) {
     images: product?.images ? JSON.parse(product.images).join('\n') : '',
     isActive: product?.isActive ?? true,
   })
-  const [variants, setVariants] = useState(
-    product?.variants || []
-  )
+  const [variants, setVariants] = useState<
+    Array<{
+      id?: number
+      name: string
+      sku: string | null
+      price: number | null
+      stock: number
+      isActive: boolean
+    }>
+  >(product?.variants || [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,8 +53,8 @@ export function ProductForm({ product }: ProductFormProps) {
     try {
       const images = formData.images
         .split('\n')
-        .map((url) => url.trim())
-        .filter((url) => url)
+        .map((url: string) => url.trim())
+        .filter((url: string) => url)
 
       const res = await fetch(
         product ? `/api/admin/products/${product.id}` : '/api/admin/products',

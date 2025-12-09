@@ -1,4 +1,5 @@
 import { requireAdmin } from '@/lib/auth'
+export const dynamic = 'force-dynamic'
 import { ProductForm } from '@/components/admin/ProductForm'
 
 export default async function NewProductPage() {
