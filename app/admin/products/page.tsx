@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/db'
 import Link from 'next/link'
 import { formatPrice } from '@/lib/utils'
+import { ProductActions } from '@/components/admin/ProductActions'
 
 export default async function AdminProductsPage() {
   await requireAdmin()
@@ -53,12 +54,10 @@ export default async function AdminProductsPage() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <Link
-                    href={`/admin/products/${product.id}/edit`}
-                    className="text-blue-600 hover:underline mr-4"
-                  >
-                    Edit
-                  </Link>
+                  <ProductActions
+                    productId={product.id}
+                    editHref={`/admin/products/${product.id}/edit`}
+                  />
                 </td>
               </tr>
             ))}
@@ -86,12 +85,10 @@ export default async function AdminProductsPage() {
               <span className="text-gray-600">Variants: {product.variants.length}</span>
             </div>
             <div className="mt-4">
-              <Link
-                href={`/admin/products/${product.id}/edit`}
-                className="text-blue-600 hover:underline font-semibold"
-              >
-                Edit
-              </Link>
+              <ProductActions
+                productId={product.id}
+                editHref={`/admin/products/${product.id}/edit`}
+              />
             </div>
           </div>
         ))}
