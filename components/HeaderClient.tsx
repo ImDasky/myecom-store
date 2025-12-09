@@ -30,8 +30,8 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const mainPadding = shrunk ? 'py-1' : 'py-5'
-  const topPadding = shrunk ? 'py-1' : 'py-3'
+  const mainPadding = shrunk ? 'py-0.5' : 'py-5'
+  const topPadding = shrunk ? 'py-0.5' : 'py-3'
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -95,7 +95,7 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
                 src={settings.logoUrl}
                 alt={settings.businessName || 'Store'}
                 largeHeight={5}
-                smallHeight={2.75} // smaller when shrunk, good for mobile
+                smallHeight={2.5} // smaller when shrunk, tighter mobile
                 shrunk={shrunk}
               />
             ) : (
