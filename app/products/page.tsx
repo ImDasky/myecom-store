@@ -20,14 +20,19 @@ export default async function ProductsPage({
   const search = searchParams.search || ''
   const categorySlug = searchParams.category || ''
   
-  // Get category if filtering by category
+  // Get category if filtering by category (gracefully handle if table doesn't exist yet)
   let categoryId: number | undefined
   if (categorySlug) {
-    const category = await prisma.category.findUnique({
-      where: { slug: categorySlug },
-      select: { id: true },
-    })
-    categoryId = category?.id
+    try {
+      const category = await prisma.category.findUnique({
+        where: { slug: categorySlug },
+        select: { id: true },
+      })
+      categoryId = category?.id
+    } catch (error: any) {
+      // Category table might not exist yet if migrations haven't run
+      console.warn('Categories table not available:', error.message)
+    }
   }
 
   const where: any = {
@@ -41,7 +46,7 @@ export default async function ProductsPage({
     }),
   }
 
-  const [products, categories] = await Promise.all([
+  const [products, categoriesResult] = await Promise.all([
     prisma.product.findMany({
       where,
       include: { variants: { where: { isActive: true } }, category: true },
@@ -50,8 +55,9 @@ export default async function ProductsPage({
     prisma.category.findMany({
       where: { isActive: true },
       orderBy: { order: 'asc' },
-    }),
+    }).catch(() => []), // Gracefully handle if table doesn't exist yet
   ])
+  const categories = categoriesResult || []
 
   const primaryColor = settings.primaryColor || '#111827'
   const accentColor = settings.secondaryColor || '#2563eb'

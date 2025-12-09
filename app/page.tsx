@@ -22,12 +22,18 @@ export default async function HomePage() {
     orderBy: { createdAt: 'desc' },
   })
 
-  // Get active categories
-  const categories = await prisma.category.findMany({
-    where: { isActive: true },
-    orderBy: { order: 'asc' },
-    take: 12,
-  })
+  // Get active categories (gracefully handle if table doesn't exist yet)
+  let categories = []
+  try {
+    categories = await prisma.category.findMany({
+      where: { isActive: true },
+      orderBy: { order: 'asc' },
+      take: 12,
+    })
+  } catch (error: any) {
+    // Category table might not exist yet if migrations haven't run
+    console.warn('Categories table not available:', error.message)
+  }
 
   const primaryColor = settings.primaryColor || '#111827'
   const accentColor = settings.secondaryColor || '#2563eb'
