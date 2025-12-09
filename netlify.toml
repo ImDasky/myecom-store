@@ -9,3 +9,7 @@
   NODE_VERSION = "18"
   PRISMA_GENERATE_DATAPROXY = "true"
 
+# Ensure environment variables are available to functions
+[functions]
+  node_bundler = "esbuild"
+
