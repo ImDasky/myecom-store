@@ -38,7 +38,11 @@ next-env.d.ts
 # prisma
 /prisma/*.db
 /prisma/*.db-journal
+.netlify
 
 # uploads
 /public/uploads
 
+
+# Local Netlify folder
+.netlify
