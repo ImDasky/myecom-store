@@ -80,9 +80,10 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
       </div>
 
       {/* Main Header */}
-      <div className={`container mx-auto px-4 ${mainPadding} transition-all duration-300 ease-in-out`}>
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+      <div className={`bg-black text-white`}>
+        <div className={`container mx-auto px-4 ${mainPadding} transition-all duration-300 ease-in-out`}>
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             {settings.logoUrl ? (
               <LogoBrand
                 src={settings.logoUrl}
@@ -92,19 +93,19 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
               />
             ) : (
               <h1 
-                className="text-3xl font-bold text-black"
+                className="text-3xl font-bold text-white"
               >
                 {settings.businessName || 'My Store'}
               </h1>
             )}
-          </Link>
+            </Link>
 
-          {/* Main Navigation */}
-          <nav className="hidden lg:flex items-center gap-10">
+            {/* Main Navigation */}
+            <nav className="hidden lg:flex items-center gap-10">
             {settings.showLocationPage && (
               <Link 
                 href="/location" 
-                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
+                className="font-semibold hover:text-gray-200 transition-colors text-white text-base"
               >
                 Locations
               </Link>
@@ -112,7 +113,7 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
             {settings.showContactPage && (
               <Link 
                 href="/contact" 
-                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
+                className="font-semibold hover:text-gray-200 transition-colors text-white text-base"
               >
                 Contact Us
               </Link>
@@ -120,7 +121,7 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
             {settings.showHomepage && (
               <Link 
                 href="/" 
-                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
+                className="font-semibold hover:text-gray-200 transition-colors text-white text-base"
               >
                 About Us
               </Link>
@@ -129,7 +130,7 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
               <div className="relative group">
                 <Link 
                   href="/products" 
-                  className="font-semibold hover:text-gray-600 transition-colors flex items-center gap-1 text-black text-base"
+                  className="font-semibold hover:text-gray-200 transition-colors flex items-center gap-1 text-white text-base"
                 >
                   Products
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,20 +138,20 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
                   </svg>
                 </Link>
                 {categories.length > 0 && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-gray-900 border border-gray-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                     <div className="p-2">
                       {categories.map((category) => (
                         <Link
                           key={category.id}
                           href={`/products?category=${category.slug}`}
-                          className="block px-4 py-2 hover:bg-gray-50 rounded transition-colors text-black"
+                          className="block px-4 py-2 hover:bg-gray-800 rounded transition-colors text-white"
                         >
                           {category.name}
                         </Link>
                       ))}
                       <Link
                         href="/products"
-                        className="block px-4 py-2 hover:bg-gray-50 rounded transition-colors font-semibold border-t border-gray-200 mt-2 pt-2 text-black"
+                        className="block px-4 py-2 hover:bg-gray-800 rounded transition-colors font-semibold border-t border-gray-800 mt-2 pt-2 text-white"
                       >
                         View All Products
                       </Link>
@@ -162,7 +163,7 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
             {settings.showBlog && (
               <Link 
                 href="/blog" 
-                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
+                className="font-semibold hover:text-gray-200 transition-colors text-white text-base"
               >
                 Resource Hub
               </Link>
@@ -170,26 +171,27 @@ export function HeaderClient({ settings, user, categories }: HeaderClientProps) 
             {user?.isAdmin && (
               <Link 
                 href="/admin" 
-                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
+                className="font-semibold hover:text-gray-200 transition-colors text-white text-base"
               >
                 Admin
               </Link>
             )}
-          </nav>
+            </nav>
 
-          {/* Mobile Menu */}
-          <MobileMenu
-            settings={{
-              showLocationPage: settings.showLocationPage,
-              showContactPage: settings.showContactPage,
-              showHomepage: settings.showHomepage,
-              showProductList: settings.showProductList,
-              showBlog: settings.showBlog,
-              showAccountArea: settings.showAccountArea,
-            }}
-            user={user}
-            categories={categories}
-          />
+            {/* Mobile Menu */}
+            <MobileMenu
+              settings={{
+                showLocationPage: settings.showLocationPage,
+                showContactPage: settings.showContactPage,
+                showHomepage: settings.showHomepage,
+                showProductList: settings.showProductList,
+                showBlog: settings.showBlog,
+                showAccountArea: settings.showAccountArea,
+              }}
+              user={user}
+              categories={categories}
+            />
+          </div>
         </div>
       </div>
     </header>
