@@ -86,7 +86,7 @@ export async function Header() {
               <img 
                 src={settings.logoUrl} 
                 alt={settings.businessName || 'Store'} 
-                className="h-16 w-auto"
+                className="h-20 w-auto"
               />
             ) : (
               <h1 
