@@ -127,6 +127,9 @@ export async function POST(request: NextRequest) {
       : null
     const shippingName = shippingInfo?.name || null
 
+    // Create a provisional unique session id placeholder to satisfy unique constraint
+    const provisionalSessionId = `temp_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
+
     // Create order
     const order = await prisma.order.create({
       data: {
@@ -135,7 +138,7 @@ export async function POST(request: NextRequest) {
         totalCents,
         currency: 'usd',
         status: 'pending',
-        stripeSessionId: '', // Will update after session creation
+        stripeSessionId: provisionalSessionId, // Will update after session creation
         shippingName,
         shippingAddress: shippingAddressJson,
         items: {
