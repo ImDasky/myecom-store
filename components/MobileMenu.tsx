@@ -33,7 +33,7 @@ export function MobileMenu({ settings, user, categories }: MobileMenuProps) {
       {/* Hamburger Button */}
       <button
         onClick={toggleMenu}
-        className="lg:hidden p-2 text-black hover:bg-gray-100 rounded-lg transition-colors"
+        className="lg:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
         aria-label="Toggle menu"
       >
         {isOpen ? (
