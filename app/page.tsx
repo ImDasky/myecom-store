@@ -61,11 +61,6 @@ export default async function HomePage() {
               return (
                 <div key={product.id} className="group border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1 w-full sm:w-[calc(50%-12px)] lg:w-[calc(20%-20px)] max-w-xs">
                   <div className="relative overflow-hidden">
-                    <span 
-                      className="absolute top-3 left-3 text-black px-2.5 py-1 rounded-md text-xs font-bold z-10 bg-white border-2 border-gray-300 shadow-sm"
-                    >
-                      #{index + 1}
-                    </span>
                     {images[0] ? (
                       <Link href={`/products/${product.slug}`}>
                         <div className="aspect-square overflow-hidden bg-gray-50">
