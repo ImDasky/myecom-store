@@ -37,6 +37,9 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Acknowledge quickly to avoid timeouts
+  const ok = NextResponse.json({ received: true })
+
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
 
@@ -82,7 +85,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      return NextResponse.json({ received: true })
+      return ok
     } catch (error) {
       console.error('Error processing webhook:', error)
       return NextResponse.json(
@@ -101,7 +104,7 @@ export async function POST(request: NextRequest) {
         data: { status: 'failed' },
       })
 
-      return NextResponse.json({ received: true })
+      return ok
     } catch (error) {
       console.error('Error processing failed payment:', error)
       return NextResponse.json(
@@ -111,6 +114,6 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  return NextResponse.json({ received: true })
+  return ok
 }
 
