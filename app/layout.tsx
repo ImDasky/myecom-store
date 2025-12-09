@@ -19,7 +19,16 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const settings = await getStoreSettings()
+  let settings
+  try {
+    settings = await getStoreSettings()
+  } catch (error) {
+    // Fallback to defaults if settings can't be loaded
+    settings = {
+      primaryColor: '#111827',
+      secondaryColor: '#f3f4f6',
+    } as any
+  }
   
   return (
     <html lang="en">
