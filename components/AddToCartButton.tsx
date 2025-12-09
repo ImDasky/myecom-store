@@ -16,29 +16,45 @@ export function AddToCartButton({ productId, variantId, disabled, accentColor = 
   const addToCart = () => {
     if (disabled || adding) return
 
-    setAdding(true)
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-    
-    const existingIndex = cart.findIndex(
-      (item: any) => item.productId === productId && item.variantId === variantId
-    )
+    try {
+      setAdding(true)
+      
+      // Check if localStorage is available (client-side only)
+      if (typeof window === 'undefined' || !window.localStorage) {
+        console.error('localStorage is not available')
+        alert('Unable to add to cart. Please try again.')
+        setAdding(false)
+        return
+      }
 
-    if (existingIndex >= 0) {
-      cart[existingIndex].quantity += quantity
-    } else {
-      cart.push({ productId, variantId, quantity })
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+      
+      const existingIndex = cart.findIndex(
+        (item: any) => item.productId === productId && 
+                      (item.variantId === variantId || (!item.variantId && !variantId))
+      )
+
+      if (existingIndex >= 0) {
+        cart[existingIndex].quantity += quantity
+      } else {
+        cart.push({ productId, variantId: variantId || null, quantity })
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart))
+      
+      // Dispatch custom event for cart button update
+      window.dispatchEvent(new Event('cartUpdated'))
+      
+      setAdding(false)
+      setQuantity(1)
+      
+      // Show feedback
+      alert('Added to cart!')
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      alert('Error adding to cart. Please try again.')
+      setAdding(false)
     }
-
-    localStorage.setItem('cart', JSON.stringify(cart))
-    
-    // Dispatch custom event for cart button update
-    window.dispatchEvent(new Event('cartUpdated'))
-    
-    setAdding(false)
-    setQuantity(1)
-    
-    // Show feedback
-    alert('Added to cart!')
   }
 
   return (
