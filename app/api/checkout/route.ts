@@ -121,6 +121,12 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Store shipping info if provided (will be updated from Stripe webhook)
+    const shippingAddressJson = shippingInfo?.address 
+      ? JSON.stringify(shippingInfo.address)
+      : null
+    const shippingName = shippingInfo?.name || null
+
     // Create order
     const order = await prisma.order.create({
       data: {
@@ -130,6 +136,8 @@ export async function POST(request: NextRequest) {
         currency: 'usd',
         status: 'pending',
         stripeSessionId: '', // Will update after session creation
+        shippingName,
+        shippingAddress: shippingAddressJson,
         items: {
           create: orderItemsData,
         },
@@ -137,32 +145,19 @@ export async function POST(request: NextRequest) {
     })
 
     // Create Stripe Checkout Session
-    const sessionConfig: any = {
+    // Note: Stripe Checkout will collect shipping address from customer
+    // The shipping info we collected is stored in the order and will be updated via webhook
+    const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
       success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/checkout`,
       customer_email: email,
-    }
-
-    // If shipping info is provided, pre-fill it
-    if (shippingInfo) {
-      sessionConfig.shipping_address_collection = {
+      shipping_address_collection: {
         allowed_countries: ['US'],
-      }
-      // Pre-fill shipping if provided
-      if (shippingInfo.address) {
-        sessionConfig.shipping_address_collection = undefined
-        sessionConfig.shipping_address = shippingInfo.address
-      }
-    } else {
-      sessionConfig.shipping_address_collection = {
-        allowed_countries: ['US'],
-      }
-    }
-
-    const session = await stripe.checkout.sessions.create(sessionConfig)
+      },
+    })
 
     // Update order with session ID
     await prisma.order.update({
