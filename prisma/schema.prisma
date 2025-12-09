@@ -16,6 +16,22 @@ model StoreSettings {
   logoUrl               String?
   primaryColor          String?  @default("#111827")
   secondaryColor        String?  @default("#f3f4f6")
+  siteTitle             String?
+  metaDescription       String?
+  ogTitle               String?
+  ogDescription         String?
+  ogImageUrl            String?
+  twitterCardType       String?  @default("summary_large_image")
+  canonicalUrl          String?
+  faviconUrl            String?
+  appleTouchIconUrl     String?
+  themeColor            String?  @default("#111827")
+  robotsIndex           Boolean  @default(true)
+  robotsFollow          Boolean  @default(true)
+  googleAnalyticsId     String?
+  googleTagManagerId    String?
+  facebookVerification  String?
+  pinterestVerification String?
   businessEmail         String?
   businessPhone         String?
   businessAddress       String?

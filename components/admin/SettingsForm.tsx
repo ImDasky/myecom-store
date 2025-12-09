@@ -15,6 +15,22 @@ export function SettingsForm({ settings: initialSettings }: SettingsFormProps) {
     logoUrl: initialSettings.logoUrl || '',
     primaryColor: initialSettings.primaryColor || '#111827',
     secondaryColor: initialSettings.secondaryColor || '#f3f4f6',
+    siteTitle: initialSettings.siteTitle || '',
+    metaDescription: initialSettings.metaDescription || '',
+    ogTitle: initialSettings.ogTitle || '',
+    ogDescription: initialSettings.ogDescription || '',
+    ogImageUrl: initialSettings.ogImageUrl || '',
+    twitterCardType: initialSettings.twitterCardType || 'summary_large_image',
+    canonicalUrl: initialSettings.canonicalUrl || '',
+    faviconUrl: initialSettings.faviconUrl || '',
+    appleTouchIconUrl: initialSettings.appleTouchIconUrl || '',
+    themeColor: initialSettings.themeColor || '#111827',
+    robotsIndex: initialSettings.robotsIndex ?? true,
+    robotsFollow: initialSettings.robotsFollow ?? true,
+    googleAnalyticsId: initialSettings.googleAnalyticsId || '',
+    googleTagManagerId: initialSettings.googleTagManagerId || '',
+    facebookVerification: initialSettings.facebookVerification || '',
+    pinterestVerification: initialSettings.pinterestVerification || '',
     businessEmail: initialSettings.businessEmail || '',
     businessPhone: initialSettings.businessPhone || '',
     businessAddress: initialSettings.businessAddress || '',
@@ -111,6 +127,165 @@ export function SettingsForm({ settings: initialSettings }: SettingsFormProps) {
               value={formData.secondaryColor}
               onChange={(e) => setFormData({ ...formData, secondaryColor: e.target.value })}
               className="w-full h-10 border rounded-lg"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* SEO & Branding */}
+      <section className="border rounded-lg p-6">
+        <h2 className="text-2xl font-semibold mb-4">SEO & Branding</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-2 font-semibold">Site Title</label>
+            <input
+              type="text"
+              value={formData.siteTitle}
+              onChange={(e) => setFormData({ ...formData, siteTitle: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Meta Description</label>
+            <textarea
+              value={formData.metaDescription}
+              onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+              rows={3}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Open Graph Title</label>
+            <input
+              type="text"
+              value={formData.ogTitle}
+              onChange={(e) => setFormData({ ...formData, ogTitle: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Open Graph Description</label>
+            <textarea
+              value={formData.ogDescription}
+              onChange={(e) => setFormData({ ...formData, ogDescription: e.target.value })}
+              rows={3}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Open Graph Image URL</label>
+            <input
+              type="url"
+              value={formData.ogImageUrl}
+              onChange={(e) => setFormData({ ...formData, ogImageUrl: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Canonical URL</label>
+            <input
+              type="url"
+              value={formData.canonicalUrl}
+              onChange={(e) => setFormData({ ...formData, canonicalUrl: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg"
+              placeholder="https://yourdomain.com"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Favicon URL</label>
+            <input
+              type="url"
+              value={formData.faviconUrl}
+              onChange={(e) => setFormData({ ...formData, faviconUrl: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Apple Touch Icon URL</label>
+            <input
+              type="url"
+              value={formData.appleTouchIconUrl}
+              onChange={(e) => setFormData({ ...formData, appleTouchIconUrl: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Theme Color</label>
+            <input
+              type="color"
+              value={formData.themeColor}
+              onChange={(e) => setFormData({ ...formData, themeColor: e.target.value })}
+              className="w-full h-10 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Twitter Card Type</label>
+            <select
+              value={formData.twitterCardType}
+              onChange={(e) => setFormData({ ...formData, twitterCardType: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg"
+            >
+              <option value="summary">summary</option>
+              <option value="summary_large_image">summary_large_image</option>
+            </select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="block font-semibold">Robots</label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={formData.robotsIndex}
+                onChange={(e) => setFormData({ ...formData, robotsIndex: e.target.checked })}
+              />
+              Allow indexing (index)
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={formData.robotsFollow}
+                onChange={(e) => setFormData({ ...formData, robotsFollow: e.target.checked })}
+              />
+              Allow following links (follow)
+            </label>
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Google Analytics ID</label>
+            <input
+              type="text"
+              value={formData.googleAnalyticsId}
+              onChange={(e) => setFormData({ ...formData, googleAnalyticsId: e.target.value })}
+              placeholder="G-XXXXXXX"
+              className="w-full px-4 py-2 border rounded-lg font-mono"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Google Tag Manager ID</label>
+            <input
+              type="text"
+              value={formData.googleTagManagerId}
+              onChange={(e) => setFormData({ ...formData, googleTagManagerId: e.target.value })}
+              placeholder="GTM-XXXXXXX"
+              className="w-full px-4 py-2 border rounded-lg font-mono"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Facebook Verification</label>
+            <input
+              type="text"
+              value={formData.facebookVerification}
+              onChange={(e) => setFormData({ ...formData, facebookVerification: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg"
+              placeholder="Facebook domain verification code"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Pinterest Verification</label>
+            <input
+              type="text"
+              value={formData.pinterestVerification}
+              onChange={(e) => setFormData({ ...formData, pinterestVerification: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg"
+              placeholder="Pinterest verification code"
             />
           </div>
         </div>
