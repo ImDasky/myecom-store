@@ -41,7 +41,7 @@ export function CategoryIcon({ iconName, className = 'w-12 h-12', color }: Categ
 
   return (
     <div style={{ color: iconColor }} className="inline-flex">
-      <IconComponent className={className} strokeWidth={2} />
+      <IconComponent className={className} />
     </div>
   )
 }
