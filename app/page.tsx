@@ -51,7 +51,7 @@ export default async function HomePage() {
             </h2>
             <p className="text-gray-600 text-lg">Our most popular items</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 justify-items-center">
+          <div className="flex flex-wrap justify-center gap-6">
             {topProducts.map((product, index) => {
               const images = product.images ? JSON.parse(product.images) : []
               const minPrice = product.variants.length > 0 && product.variants.some(v => v.price)
@@ -59,7 +59,7 @@ export default async function HomePage() {
                 : product.basePrice
 
               return (
-                <div key={product.id} className="group border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1 w-full max-w-xs">
+                <div key={product.id} className="group border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1 w-full sm:w-[calc(50%-12px)] lg:w-[calc(20%-20px)] max-w-xs">
                   <div className="relative overflow-hidden">
                     <span 
                       className="absolute top-3 left-3 text-black px-2.5 py-1 rounded-md text-xs font-bold z-10 bg-white border-2 border-gray-300 shadow-sm"
@@ -112,12 +112,12 @@ export default async function HomePage() {
               </h2>
               <p className="text-gray-600 text-lg">Browse our product categories</p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 justify-items-center">
+            <div className="flex flex-wrap justify-center gap-6">
               {categories.map((category) => (
                 <Link
                   key={category.id}
                   href={`/products?category=${category.slug}`}
-                  className="group bg-white border-2 border-gray-200 rounded-xl p-6 text-center hover:shadow-lg hover:border-gray-300 transition-all duration-300 hover:-translate-y-1 w-full max-w-xs"
+                  className="group bg-white border-2 border-gray-200 rounded-xl p-6 text-center hover:shadow-lg hover:border-gray-300 transition-all duration-300 hover:-translate-y-1 w-[calc(50%-12px)] sm:w-[calc(33.333%-16px)] md:w-[calc(25%-18px)] lg:w-[calc(16.666%-20px)] max-w-xs"
                 >
                   <div className="flex justify-center mb-4">
                     <div className="p-3 rounded-full bg-gray-50 group-hover:bg-gray-100 transition-colors">
