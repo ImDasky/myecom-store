@@ -5,6 +5,7 @@ import { CartButton } from './CartButton'
 import { SearchButton } from './SearchButton'
 import { MobileMenu } from './MobileMenu'
 import { prisma } from '@/lib/db'
+import { LogoBrand } from './LogoBrand'
 
 export async function Header() {
   const settings = await getStoreSettings()
@@ -83,10 +84,11 @@ export async function Header() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             {settings.logoUrl ? (
-              <img 
-                src={settings.logoUrl} 
-                alt={settings.businessName || 'Store'} 
-                className="h-20 w-auto"
+              <LogoBrand
+                src={settings.logoUrl}
+                alt={settings.businessName || 'Store'}
+                largeHeight={5}
+                smallHeight={3}
               />
             ) : (
               <h1 
