@@ -35,8 +35,7 @@ export async function Header() {
               {settings.businessPhone && (
                 <a 
                   href={`tel:${settings.businessPhone}`}
-                  className="font-semibold hover:opacity-70 transition-opacity"
-                  className="text-black"
+                  className="font-semibold hover:opacity-70 transition-opacity text-black"
                 >
                   {settings.businessPhone}
                 </a>
@@ -50,8 +49,7 @@ export async function Header() {
                   {user ? (
                     <Link 
                       href="/account" 
-                      className="hover:opacity-70 transition-opacity font-medium"
-                      className="text-black"
+                      className="hover:opacity-70 transition-opacity font-medium text-black"
                     >
                       My Account
                     </Link>
@@ -59,16 +57,14 @@ export async function Header() {
                     <>
                       <Link 
                         href="/auth/login" 
-                        className="hover:opacity-70 transition-opacity"
-                        className="text-black"
+                        className="hover:opacity-70 transition-opacity text-black"
                       >
                         Sign In
                       </Link>
                       <span className="text-gray-400">/</span>
                       <Link 
                         href="/auth/register" 
-                        className="hover:opacity-70 transition-opacity"
-                        className="text-black"
+                        className="hover:opacity-70 transition-opacity text-black"
                       >
                         Register
                       </Link>
@@ -93,8 +89,7 @@ export async function Header() {
               />
             ) : (
               <h1 
-                className="text-3xl font-bold"
-                        className="text-black"
+                className="text-3xl font-bold text-black"
               >
                 {settings.businessName || 'My Store'}
               </h1>
@@ -106,8 +101,7 @@ export async function Header() {
             {settings.showLocationPage && (
               <Link 
                 href="/location" 
-                className="font-medium hover:opacity-70 transition-opacity"
-                        className="text-black"
+                className="font-medium hover:opacity-70 transition-opacity text-black"
               >
                 Locations
               </Link>
@@ -115,8 +109,7 @@ export async function Header() {
             {settings.showContactPage && (
               <Link 
                 href="/contact" 
-                className="font-medium hover:opacity-70 transition-opacity"
-                        className="text-black"
+                className="font-medium hover:opacity-70 transition-opacity text-black"
               >
                 Contact Us
               </Link>
@@ -124,8 +117,7 @@ export async function Header() {
             {settings.showHomepage && (
               <Link 
                 href="/" 
-                className="font-medium hover:opacity-70 transition-opacity"
-                        className="text-black"
+                className="font-medium hover:opacity-70 transition-opacity text-black"
               >
                 About Us
               </Link>
@@ -134,8 +126,7 @@ export async function Header() {
               <div className="relative group">
                 <Link 
                   href="/products" 
-                  className="font-medium hover:opacity-70 transition-opacity flex items-center gap-1"
-                  className="text-black"
+                  className="font-medium hover:opacity-70 transition-opacity flex items-center gap-1 text-black"
                 >
                   Products
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,8 +167,7 @@ export async function Header() {
             {user?.isAdmin && (
               <Link 
                 href="/admin" 
-                className="font-medium hover:opacity-70 transition-opacity"
-                        className="text-black"
+                className="font-medium hover:opacity-70 transition-opacity text-black"
               >
                 Admin
               </Link>
@@ -185,7 +175,7 @@ export async function Header() {
           </nav>
 
           {/* Mobile Menu Button */}
-          <button className="lg:hidden p-2" style={{ color: primaryColor }}>
+          <button className="lg:hidden p-2 text-black">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
