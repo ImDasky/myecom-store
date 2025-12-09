@@ -48,6 +48,7 @@ model StoreSettings {
   instagramUrl          String?
   twitterUrl            String?
   tiktokUrl             String?
+  mapEmbedHtml          String?
   stripeSecretKey       String?
   stripePublishableKey  String?
   showHomepage          Boolean  @default(true)

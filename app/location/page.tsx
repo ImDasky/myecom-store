@@ -90,6 +90,20 @@ export default async function LocationPage() {
           </div>
         </div>
       </div>
+
+      {settings.mapEmbedHtml && (
+        <div className="mt-12 max-w-5xl mx-auto">
+          <h2 className="text-2xl font-semibold mb-4 text-center" style={{ color: primaryColor }}>
+            Find Us
+          </h2>
+          <div className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+            <div
+              className="w-full aspect-video"
+              dangerouslySetInnerHTML={{ __html: settings.mapEmbedHtml }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

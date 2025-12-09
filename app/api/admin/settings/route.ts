@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
         instagramUrl: data.instagramUrl || null,
         twitterUrl: data.twitterUrl || null,
         tiktokUrl: data.tiktokUrl || null,
+        mapEmbedHtml: data.mapEmbedHtml || null,
         showHomepage: data.showHomepage ?? true,
         showProductList: data.showProductList ?? true,
         showSearch: data.showSearch ?? true,

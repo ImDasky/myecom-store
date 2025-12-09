@@ -47,6 +47,7 @@ export function SettingsForm({ settings: initialSettings }: SettingsFormProps) {
     instagramUrl: initialSettings.instagramUrl || '',
     twitterUrl: initialSettings.twitterUrl || '',
     tiktokUrl: initialSettings.tiktokUrl || '',
+    mapEmbedHtml: initialSettings.mapEmbedHtml || '',
     showHomepage: initialSettings.showHomepage ?? true,
     showProductList: initialSettings.showProductList ?? true,
     showSearch: initialSettings.showSearch ?? true,
@@ -416,6 +417,24 @@ export function SettingsForm({ settings: initialSettings }: SettingsFormProps) {
             placeholder="Monday: 9:00 AM - 6:00 PM&#10;Tuesday: 9:00 AM - 6:00 PM&#10;..."
             className="w-full px-4 py-2 border rounded-lg font-mono"
           />
+        </div>
+      </section>
+
+      {/* Map Embed */}
+      <section className="border rounded-lg p-6">
+        <h2 className="text-2xl font-semibold mb-4">Visit Us Map Embed</h2>
+        <div className="space-y-2">
+          <label className="block mb-2 font-semibold">Google Maps Embed HTML</label>
+          <textarea
+            value={formData.mapEmbedHtml}
+            onChange={(e) => setFormData({ ...formData, mapEmbedHtml: e.target.value })}
+            rows={5}
+            placeholder='<iframe src="https://www.google.com/maps/embed?..."></iframe>'
+            className="w-full px-4 py-2 border rounded-lg font-mono text-sm"
+          />
+          <p className="text-sm text-gray-600">
+            Paste the Google Maps embed iframe code. It will appear on the Visit Us page.
+          </p>
         </div>
       </section>
 
