@@ -12,7 +12,7 @@ interface CartItem {
 
 export async function POST(request: NextRequest) {
   try {
-    const { items, email, shipping } = await request.json()
+    const { items, email, shipping: shippingInfo } = await request.json()
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
@@ -147,14 +147,14 @@ export async function POST(request: NextRequest) {
     }
 
     // If shipping info is provided, pre-fill it
-    if (shipping) {
+    if (shippingInfo) {
       sessionConfig.shipping_address_collection = {
         allowed_countries: ['US'],
       }
       // Pre-fill shipping if provided
-      if (shipping.address) {
+      if (shippingInfo.address) {
         sessionConfig.shipping_address_collection = undefined
-        sessionConfig.shipping_address = shipping.address
+        sessionConfig.shipping_address = shippingInfo.address
       }
     } else {
       sessionConfig.shipping_address_collection = {
