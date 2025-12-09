@@ -51,7 +51,7 @@ export default async function HomePage() {
             </h2>
             <p className="text-gray-600 text-lg">Our most popular items</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 justify-items-center">
             {topProducts.map((product, index) => {
               const images = product.images ? JSON.parse(product.images) : []
               const minPrice = product.variants.length > 0 && product.variants.some(v => v.price)
@@ -59,7 +59,7 @@ export default async function HomePage() {
                 : product.basePrice
 
               return (
-                <div key={product.id} className="group border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1">
+                <div key={product.id} className="group border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1 w-full max-w-xs">
                   <div className="relative overflow-hidden">
                     <span 
                       className="absolute top-3 left-3 text-black px-2.5 py-1 rounded-md text-xs font-bold z-10 bg-white border-2 border-gray-300 shadow-sm"
@@ -82,7 +82,7 @@ export default async function HomePage() {
                       </div>
                     )}
                   </div>
-                  <div className="p-5">
+                  <div className="p-5 text-center">
                     <Link href={`/products/${product.slug}`}>
                       <h3 className="font-semibold mb-2 hover:underline line-clamp-2 text-black text-base leading-tight">
                         {product.name}
@@ -91,7 +91,9 @@ export default async function HomePage() {
                     <p className="font-bold text-xl mb-4 text-black">
                       {formatPrice(minPrice)}
                     </p>
-                    <AddToCartButton productId={product.id} accentColor={accentColor} />
+                    <div className="flex justify-center">
+                      <AddToCartButton productId={product.id} accentColor={accentColor} />
+                    </div>
                   </div>
                 </div>
               )
@@ -110,12 +112,12 @@ export default async function HomePage() {
               </h2>
               <p className="text-gray-600 text-lg">Browse our product categories</p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 justify-items-center">
               {categories.map((category) => (
                 <Link
                   key={category.id}
                   href={`/products?category=${category.slug}`}
-                  className="group bg-white border-2 border-gray-200 rounded-xl p-6 text-center hover:shadow-lg hover:border-gray-300 transition-all duration-300 hover:-translate-y-1"
+                  className="group bg-white border-2 border-gray-200 rounded-xl p-6 text-center hover:shadow-lg hover:border-gray-300 transition-all duration-300 hover:-translate-y-1 w-full max-w-xs"
                 >
                   <div className="flex justify-center mb-4">
                     <div className="p-3 rounded-full bg-gray-50 group-hover:bg-gray-100 transition-colors">
