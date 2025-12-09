@@ -14,7 +14,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const { stdout, stderr } = await execAsync('npx prisma migrate deploy')
+    const cmd = 'mkdir -p /tmp/.npm && NPM_CONFIG_CACHE=/tmp/.npm npx prisma migrate deploy'
+    const { stdout, stderr } = await execAsync(cmd)
     return NextResponse.json({
       success: true,
       output: stdout,
