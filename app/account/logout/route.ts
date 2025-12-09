@@ -10,6 +10,6 @@ export async function POST(request: Request) {
   const proto = request.headers.get('x-forwarded-proto') ?? 'https'
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `${proto}://${host}` : 'http://localhost:3000')
 
-  return NextResponse.redirect(new URL('/auth/login', baseUrl))
+  return NextResponse.redirect(new URL('/auth/login', baseUrl), 303)
 }
 
