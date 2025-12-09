@@ -65,19 +65,20 @@ export default async function ProductsPage({
   const accentColor = settings.secondaryColor || '#2563eb'
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4 text-black">
+    <div className="container mx-auto px-4 py-12">
+      <div className="mb-10">
+        <h1 className="text-5xl font-bold mb-2 text-black">
           Products
         </h1>
+        <p className="text-gray-600 text-lg mb-6">Browse our complete catalog</p>
         {categories.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-3 mb-8">
             <Link
               href="/products"
-              className={`px-4 py-2 rounded-lg border transition-colors text-black ${
+              className={`px-5 py-2.5 rounded-lg border-2 font-semibold transition-all text-black ${
                 !categorySlug
-                  ? 'bg-gray-200 border-gray-400'
-                  : 'bg-white hover:bg-gray-50 border-gray-300'
+                  ? 'bg-gray-200 border-gray-400 shadow-sm'
+                  : 'bg-white hover:bg-gray-50 border-gray-300 hover:border-gray-400 hover:shadow-sm'
               }`}
             >
               All Products
@@ -86,10 +87,10 @@ export default async function ProductsPage({
               <Link
                 key={category.id}
                 href={`/products?category=${category.slug}`}
-                className={`px-4 py-2 rounded-lg border transition-colors flex items-center gap-2 text-black ${
+                className={`px-5 py-2.5 rounded-lg border-2 font-semibold transition-all flex items-center gap-2 text-black ${
                   categorySlug === category.slug
-                    ? 'bg-gray-200 border-gray-400'
-                    : 'bg-white hover:bg-gray-50 border-gray-300'
+                    ? 'bg-gray-200 border-gray-400 shadow-sm'
+                    : 'bg-white hover:bg-gray-50 border-gray-300 hover:border-gray-400 hover:shadow-sm'
                 }`}
               >
                 <CategoryIcon iconName={category.icon} className="w-5 h-5" />
@@ -105,11 +106,7 @@ export default async function ProductsPage({
               name="search"
               placeholder="Search products..."
               defaultValue={search}
-              className="w-full px-4 py-2 border rounded-lg"
-              style={{ 
-                borderColor: primaryColor + '40',
-                color: primaryColor,
-              }}
+              className="w-full px-5 py-3 border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 text-black placeholder-gray-400"
             />
           </form>
         )}
@@ -138,30 +135,29 @@ export default async function ProductsPage({
                 className="group"
               >
                 <div 
-                  className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-white"
-                  style={{ borderColor: primaryColor + '20' }}
+                  className="group border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1"
                 >
                   <Link href={`/products/${product.slug}`}>
                     {images[0] && (
-                      <div className="aspect-square relative bg-gray-100">
+                      <div className="aspect-square relative bg-gray-50 overflow-hidden">
                         <img
                           src={images[0]}
                           alt={product.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                     )}
                   </Link>
-                  <div className="p-4">
+                  <div className="p-5">
                     <Link href={`/products/${product.slug}`}>
-                      <h3 className="font-semibold text-lg mb-2 hover:underline text-black">
+                      <h3 className="font-semibold text-lg mb-2 hover:underline text-black leading-tight">
                         {product.name}
                       </h3>
-                      <p className="text-sm opacity-70 mb-2 line-clamp-2 text-black">
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2 leading-relaxed">
                         {product.description}
                       </p>
                     </Link>
-                    <p className="font-bold mb-3 text-black">
+                    <p className="font-bold text-xl mb-4 text-black">
                       {minPrice === maxPrice 
                         ? formatPrice(minPrice)
                         : `${formatPrice(minPrice)} - ${formatPrice(maxPrice)}`

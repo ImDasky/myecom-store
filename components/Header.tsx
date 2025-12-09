@@ -26,10 +26,10 @@ export async function Header() {
   }
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header className="bg-white shadow-md sticky top-0 z-50">
       {/* Top Bar */}
       <div className="bg-gray-50 border-b border-gray-200">
-        <div className="container mx-auto px-4 py-2">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-6">
               {settings.businessPhone && (
@@ -78,14 +78,14 @@ export async function Header() {
       </div>
 
       {/* Main Header */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-5">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             {settings.logoUrl ? (
               <img 
                 src={settings.logoUrl} 
                 alt={settings.businessName || 'Store'} 
-                className="h-12 w-auto"
+                className="h-14 w-auto"
               />
             ) : (
               <h1 
@@ -97,11 +97,11 @@ export async function Header() {
           </Link>
 
           {/* Main Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-10">
             {settings.showLocationPage && (
               <Link 
                 href="/location" 
-                className="font-medium hover:opacity-70 transition-opacity text-black"
+                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
               >
                 Locations
               </Link>
@@ -109,7 +109,7 @@ export async function Header() {
             {settings.showContactPage && (
               <Link 
                 href="/contact" 
-                className="font-medium hover:opacity-70 transition-opacity text-black"
+                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
               >
                 Contact Us
               </Link>
@@ -117,7 +117,7 @@ export async function Header() {
             {settings.showHomepage && (
               <Link 
                 href="/" 
-                className="font-medium hover:opacity-70 transition-opacity text-black"
+                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
               >
                 About Us
               </Link>
@@ -126,7 +126,7 @@ export async function Header() {
               <div className="relative group">
                 <Link 
                   href="/products" 
-                  className="font-medium hover:opacity-70 transition-opacity flex items-center gap-1 text-black"
+                  className="font-semibold hover:text-gray-600 transition-colors flex items-center gap-1 text-black text-base"
                 >
                   Products
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +159,7 @@ export async function Header() {
             {settings.showBlog && (
               <Link 
                 href="/blog" 
-                className="font-medium hover:opacity-70 transition-opacity text-black"
+                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
               >
                 Resource Hub
               </Link>
@@ -167,7 +167,7 @@ export async function Header() {
             {user?.isAdmin && (
               <Link 
                 href="/admin" 
-                className="font-medium hover:opacity-70 transition-opacity text-black"
+                className="font-semibold hover:text-gray-600 transition-colors text-black text-base"
               >
                 Admin
               </Link>

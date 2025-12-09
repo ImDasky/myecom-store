@@ -21,8 +21,8 @@ export async function Footer() {
   const accentColor = settings.secondaryColor || '#2563eb'
 
   return (
-    <footer className="bg-gray-900 text-white mt-auto">
-      <div className="container mx-auto px-4 py-12">
+    <footer className="bg-gray-900 text-white mt-auto border-t-4 border-gray-800">
+      <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company */}
           <div>
@@ -162,14 +162,14 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
-          <p>Copyright © {new Date().getFullYear()} {settings.businessName || 'My Store'}. All rights reserved.</p>
-          <div className="mt-2 space-x-4">
-            <Link href="/privacy" className="hover:text-white transition-colors">
+        <div className="mt-12 pt-8 border-t border-gray-800 text-center">
+          <p className="text-sm text-gray-400 mb-4">Copyright © {new Date().getFullYear()} {settings.businessName || 'My Store'}. All rights reserved.</p>
+          <div className="flex justify-center gap-6 text-sm">
+            <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
               Privacy Policy
             </Link>
-            <span>|</span>
-            <Link href="/terms" className="hover:text-white transition-colors">
+            <span className="text-gray-600">|</span>
+            <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
               Terms of Use
             </Link>
           </div>

@@ -26,12 +26,12 @@ export default async function ProductPage({
   const accentColor = settings.secondaryColor || '#2563eb'
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="container mx-auto px-4 py-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Images */}
         <div>
           {images[0] ? (
-            <div className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden">
+            <div className="aspect-square relative bg-gray-50 rounded-xl overflow-hidden border-2 border-gray-200 shadow-sm">
               <img
                 src={images[0]}
                 alt={product.name}
@@ -39,14 +39,14 @@ export default async function ProductPage({
               />
             </div>
           ) : (
-            <div className="aspect-square rounded-lg flex items-center justify-center bg-gray-100">
-              <span className="text-black">No Image</span>
+            <div className="aspect-square rounded-xl flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-gray-200">
+              <span className="text-gray-500">No Image</span>
             </div>
           )}
           {images.length > 1 && (
-            <div className="grid grid-cols-4 gap-2 mt-4">
+            <div className="grid grid-cols-4 gap-3 mt-4">
               {images.slice(1).map((img: string, idx: number) => (
-                <div key={idx} className="aspect-square relative bg-gray-100 rounded overflow-hidden">
+                <div key={idx} className="aspect-square relative bg-gray-50 rounded-lg overflow-hidden border border-gray-200 cursor-pointer hover:border-gray-300 transition-colors">
                   <img
                     src={img}
                     alt={`${product.name} ${idx + 2}`}
@@ -60,21 +60,21 @@ export default async function ProductPage({
 
         {/* Product Info */}
         <div>
-          <h1 className="text-4xl font-bold mb-4 text-black">
+          <h1 className="text-5xl font-bold mb-4 text-black leading-tight">
             {product.name}
           </h1>
-          <p className="text-2xl font-semibold mb-6 text-black">
+          <p className="text-3xl font-semibold mb-8 text-black">
             {product.variants.length > 0
               ? `${formatPrice(Math.min(...product.variants.map(v => v.price || product.basePrice)))} - ${formatPrice(Math.max(...product.variants.map(v => v.price || product.basePrice)))}`
               : formatPrice(product.basePrice)
             }
           </p>
           {product.description && (
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-2 text-black">
+            <div className="mb-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
+              <h2 className="text-xl font-semibold mb-3 text-black">
                 Description
               </h2>
-              <p className="leading-relaxed text-black">
+              <p className="leading-relaxed text-gray-700 text-base">
                 {product.description}
               </p>
             </div>
@@ -82,16 +82,15 @@ export default async function ProductPage({
 
           {/* Variants */}
           {product.variants.length > 0 ? (
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-4 text-black">
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold mb-5 text-black">
                 Options
               </h2>
               <div className="space-y-4">
                 {product.variants.map((variant) => (
                   <div 
                     key={variant.id}
-                    className="p-4 border rounded-lg"
-                    style={{ borderColor: primaryColor + '20' }}
+                    className="p-5 border-2 border-gray-200 rounded-xl bg-white hover:border-gray-300 hover:shadow-md transition-all"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div>
