@@ -119,7 +119,7 @@ export default async function ProductsPage({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="flex flex-wrap justify-center gap-6">
           {products.map((product) => {
             const images = product.images ? JSON.parse(product.images) : []
             const minPrice = product.variants.length > 0 && product.variants.some(v => v.price)
@@ -132,37 +132,35 @@ export default async function ProductsPage({
             return (
               <div
                 key={product.id}
-                className="group"
+                className="group border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1 w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] max-w-xs"
               >
-                <div 
-                  className="group border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1"
-                >
+                <Link href={`/products/${product.slug}`}>
+                  {images[0] && (
+                    <div className="aspect-square relative bg-gray-50 overflow-hidden">
+                      <img
+                        src={images[0]}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+                </Link>
+                <div className="p-5 text-center">
                   <Link href={`/products/${product.slug}`}>
-                    {images[0] && (
-                      <div className="aspect-square relative bg-gray-50 overflow-hidden">
-                        <img
-                          src={images[0]}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    )}
-                  </Link>
-                  <div className="p-5">
-                    <Link href={`/products/${product.slug}`}>
-                      <h3 className="font-semibold text-lg mb-2 hover:underline text-black leading-tight">
-                        {product.name}
-                      </h3>
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2 leading-relaxed">
-                        {product.description}
-                      </p>
-                    </Link>
-                    <p className="font-bold text-xl mb-4 text-black">
-                      {minPrice === maxPrice 
-                        ? formatPrice(minPrice)
-                        : `${formatPrice(minPrice)} - ${formatPrice(maxPrice)}`
-                      }
+                    <h3 className="font-semibold text-base mb-2 hover:underline text-black leading-tight line-clamp-2">
+                      {product.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-3 line-clamp-2 leading-relaxed">
+                      {product.description}
                     </p>
+                  </Link>
+                  <p className="font-bold text-xl mb-4 text-black">
+                    {minPrice === maxPrice 
+                      ? formatPrice(minPrice)
+                      : `${formatPrice(minPrice)} - ${formatPrice(maxPrice)}`
+                    }
+                  </p>
+                  <div className="flex justify-center">
                     <AddToCartButton productId={product.id} accentColor={accentColor} />
                   </div>
                 </div>
