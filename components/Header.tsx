@@ -3,6 +3,7 @@ import { getStoreSettings } from '@/lib/settings'
 import { getCurrentUser } from '@/lib/auth'
 import { CartButton } from './CartButton'
 import { SearchButton } from './SearchButton'
+import { MobileMenu } from './MobileMenu'
 import { prisma } from '@/lib/db'
 
 export async function Header() {
@@ -13,7 +14,7 @@ export async function Header() {
   const accentColor = settings.secondaryColor || '#2563eb'
 
   // Get active categories for navigation (gracefully handle if table doesn't exist yet)
-  let categories: Array<{ id: number; name: string; slug: string }> = []
+  let categories: Array<{ id: number; name: string; slug: string; icon: string | null }> = []
   try {
     categories = await prisma.category.findMany({
       where: { isActive: true },
@@ -174,12 +175,19 @@ export async function Header() {
             )}
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button className="lg:hidden p-2 text-black">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+          {/* Mobile Menu */}
+          <MobileMenu
+            settings={{
+              showLocationPage: settings.showLocationPage,
+              showContactPage: settings.showContactPage,
+              showHomepage: settings.showHomepage,
+              showProductList: settings.showProductList,
+              showBlog: settings.showBlog,
+              showAccountArea: settings.showAccountArea,
+            }}
+            user={user}
+            categories={categories}
+          />
         </div>
       </div>
     </header>
