@@ -6,9 +6,10 @@ interface AddToCartButtonProps {
   productId: number
   variantId?: number
   disabled?: boolean
+  accentColor?: string
 }
 
-export function AddToCartButton({ productId, variantId, disabled }: AddToCartButtonProps) {
+export function AddToCartButton({ productId, variantId, disabled, accentColor = '#2563eb' }: AddToCartButtonProps) {
   const [quantity, setQuantity] = useState(1)
   const [adding, setAdding] = useState(false)
 
@@ -53,10 +54,9 @@ export function AddToCartButton({ productId, variantId, disabled }: AddToCartBut
       <button
         onClick={addToCart}
         disabled={disabled || adding}
-        className="px-6 py-2 rounded font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-6 py-2 rounded font-semibold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         style={{
-          backgroundColor: disabled ? '#ccc' : '#111827',
-          color: '#fff',
+          backgroundColor: disabled ? '#ccc' : accentColor,
         }}
       >
         {adding ? 'Adding...' : 'Add to Cart'}

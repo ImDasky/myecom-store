@@ -23,7 +23,7 @@ export default async function ProductPage({
 
   const images = product.images ? JSON.parse(product.images) : []
   const primaryColor = settings.primaryColor || '#111827'
-  const secondaryColor = settings.secondaryColor || '#f3f4f6'
+  const accentColor = settings.secondaryColor || '#2563eb'
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -41,7 +41,7 @@ export default async function ProductPage({
           ) : (
             <div 
               className="aspect-square rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: secondaryColor }}
+              className="bg-gray-100"
             >
               <span style={{ color: primaryColor }}>No Image</span>
             </div>
@@ -119,6 +119,7 @@ export default async function ProductPage({
                         productId={product.id}
                         variantId={variant.id}
                         disabled={variant.stock === 0}
+                        accentColor={accentColor}
                       />
                     </div>
                   </div>
@@ -127,7 +128,7 @@ export default async function ProductPage({
             </div>
           ) : (
             <div className="mb-6">
-              <AddToCartButton productId={product.id} />
+              <AddToCartButton productId={product.id} accentColor={accentColor} />
             </div>
           )}
         </div>

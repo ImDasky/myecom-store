@@ -57,20 +57,6 @@ model User {
   orders       Order[]
 }
 
-model Product {
-  id          Int         @id @default(autoincrement())
-  name        String
-  slug        String      @unique
-  description String?
-  basePrice   Int
-  images      String
-  isActive    Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  variants    Variant[]
-  orderItems  OrderItem[]
-}
-
 model Variant {
   id        Int     @id @default(autoincrement())
   productId Int
@@ -125,4 +111,33 @@ model FAQ {
   question String
   answer   String
   order    Int    @default(0)
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  icon        String?
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  basePrice   Int
+  images      String
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  variants    Variant[]
+  orderItems  OrderItem[]
 }

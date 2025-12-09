@@ -12,6 +12,7 @@ interface ProductFormProps {
     description: string | null
     basePrice: number
     images: string
+    categoryId: number | null
     isActive: boolean
     variants: Array<{
       id: number
@@ -22,9 +23,13 @@ interface ProductFormProps {
       isActive: boolean
     }>
   }
+  categories?: Array<{
+    id: number
+    name: string
+  }>
 }
 
-export function ProductForm({ product }: ProductFormProps) {
+export function ProductForm({ product, categories = [] }: ProductFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -33,6 +38,7 @@ export function ProductForm({ product }: ProductFormProps) {
     description: product?.description || '',
     basePrice: product?.basePrice || 0,
     images: product?.images ? JSON.parse(product.images).join('\n') : '',
+    categoryId: product?.categoryId || null,
     isActive: product?.isActive ?? true,
   })
   const [variants, setVariants] = useState<
@@ -147,6 +153,22 @@ export function ProductForm({ product }: ProductFormProps) {
           min="0"
           className="w-full px-4 py-2 border rounded-lg"
         />
+      </div>
+
+      <div>
+        <label className="block mb-2 font-semibold">Category</label>
+        <select
+          value={formData.categoryId || ''}
+          onChange={(e) => setFormData({ ...formData, categoryId: e.target.value ? parseInt(e.target.value) : null })}
+          className="w-full px-4 py-2 border rounded-lg"
+        >
+          <option value="">No Category</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>

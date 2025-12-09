@@ -122,6 +122,12 @@ export default async function AdminDashboard() {
             >
               Manage FAQ
             </Link>
+            <Link
+              href="/admin/categories"
+              className="block p-3 border rounded hover:bg-gray-50"
+            >
+              Manage Categories
+            </Link>
           </div>
         </div>
       </div>

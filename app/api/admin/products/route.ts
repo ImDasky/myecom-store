@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
         description: data.description || null,
         basePrice: data.basePrice,
         images: data.images,
+        categoryId: data.categoryId || null,
         isActive: data.isActive ?? true,
         variants: {
           create: data.variants.map((v: any) => ({

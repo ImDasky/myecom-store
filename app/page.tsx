@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { formatPrice } from '@/lib/utils'
+import { AddToCartButton } from '@/components/AddToCartButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,146 +14,162 @@ export default async function HomePage() {
     redirect('/products')
   }
 
-  const featuredProducts = await prisma.product.findMany({
+  // Get top selling products (for now, just get recent products)
+  const topProducts = await prisma.product.findMany({
     where: { isActive: true },
     include: { variants: { where: { isActive: true } } },
-    take: 6,
+    take: 5,
     orderBy: { createdAt: 'desc' },
   })
 
+  // Get active categories
+  const categories = await prisma.category.findMany({
+    where: { isActive: true },
+    orderBy: { order: 'asc' },
+    take: 12,
+  })
+
   const primaryColor = settings.primaryColor || '#111827'
-  const secondaryColor = settings.secondaryColor || '#f3f4f6'
+  const accentColor = settings.secondaryColor || '#2563eb'
 
   return (
-    <div>
-      {/* Hero Section */}
-      {settings.heroImageUrl && (
-        <section 
-          className="relative h-[60vh] flex items-center justify-center bg-cover bg-center"
-          style={{ backgroundImage: `url(${settings.heroImageUrl})` }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-          <div className="relative z-10 text-center text-white px-4">
-            {settings.heroHeadline && (
-              <h1 className="text-5xl font-bold mb-4">{settings.heroHeadline}</h1>
-            )}
-            {settings.heroSubheadline && (
-              <p className="text-xl mb-8">{settings.heroSubheadline}</p>
-            )}
-            {settings.showProductList && (
-              <Link
-                href="/products"
-                className="inline-block px-8 py-3 rounded-lg font-semibold"
-                style={{ backgroundColor: primaryColor, color: secondaryColor }}
-              >
-                Shop Now
-              </Link>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* Featured Products */}
-      {featuredProducts.length > 0 && (
-        <section className="container mx-auto px-4 py-16">
+    <div className="bg-white">
+      {/* Top Selling Products Section */}
+      {topProducts.length > 0 && (
+        <section className="container mx-auto px-4 py-12">
           <h2 className="text-3xl font-bold mb-8 text-center" style={{ color: primaryColor }}>
-            Featured Products
+            Top Selling Products
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {topProducts.map((product, index) => {
               const images = product.images ? JSON.parse(product.images) : []
               const minPrice = product.variants.length > 0 && product.variants.some(v => v.price)
                 ? Math.min(...product.variants.filter(v => v.price).map(v => v.price!))
                 : product.basePrice
-              const maxPrice = product.variants.length > 0 && product.variants.some(v => v.price)
-                ? Math.max(...product.variants.filter(v => v.price).map(v => v.price!))
-                : product.basePrice
 
               return (
-                <Link
-                  key={product.id}
-                  href={`/products/${product.slug}`}
-                  className="group"
-                >
-                  <div 
-                    className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
-                    style={{ borderColor: primaryColor + '20' }}
-                  >
-                    {images[0] && (
-                      <div className="aspect-square relative bg-gray-100">
+                <div key={product.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-white">
+                  <div className="relative">
+                    <span 
+                      className="absolute top-2 left-2 text-white px-2 py-1 rounded text-xs font-bold z-10"
+                      style={{ backgroundColor: accentColor }}
+                    >
+                      #{index + 1}
+                    </span>
+                    {images[0] ? (
+                      <Link href={`/products/${product.slug}`}>
                         <img
                           src={images[0]}
                           alt={product.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-48 object-cover"
                         />
+                      </Link>
+                    ) : (
+                      <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
+                        <span className="text-gray-400">No Image</span>
                       </div>
                     )}
-                    <div className="p-4">
-                      <h3 className="font-semibold text-lg mb-2" style={{ color: primaryColor }}>
+                  </div>
+                  <div className="p-4">
+                    <Link href={`/products/${product.slug}`}>
+                      <h3 className="font-semibold mb-2 hover:underline line-clamp-2" style={{ color: primaryColor }}>
                         {product.name}
                       </h3>
-                      <p className="text-sm opacity-70 mb-2 line-clamp-2" style={{ color: primaryColor }}>
-                        {product.description}
-                      </p>
-                      <p className="font-bold" style={{ color: primaryColor }}>
-                        {minPrice === maxPrice 
-                          ? formatPrice(minPrice)
-                          : `${formatPrice(minPrice)} - ${formatPrice(maxPrice)}`
-                        }
-                      </p>
-                    </div>
+                    </Link>
+                    <p className="font-bold text-lg mb-3" style={{ color: primaryColor }}>
+                      {formatPrice(minPrice)}
+                    </p>
+                    <AddToCartButton productId={product.id} accentColor={accentColor} />
                   </div>
-                </Link>
+                </div>
               )
             })}
           </div>
-          {settings.showProductList && (
-            <div className="text-center mt-8">
-              <Link
-                href="/products"
-                className="inline-block px-8 py-3 rounded-lg font-semibold"
-                style={{ backgroundColor: primaryColor, color: secondaryColor }}
-              >
-                View All Products
-              </Link>
-            </div>
-          )}
         </section>
       )}
 
-      {/* About Section */}
-      {settings.aboutText && (
-        <section 
-          className="py-16"
-          style={{ backgroundColor: secondaryColor }}
-        >
+      {/* Shop by Product Group */}
+      {categories.length > 0 && (
+        <section className="bg-gray-50 py-12">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-6" style={{ color: primaryColor }}>
-                About Us
-              </h2>
-              <p className="text-lg leading-relaxed" style={{ color: primaryColor }}>
-                {settings.aboutText}
-              </p>
+            <h2 className="text-3xl font-bold mb-8 text-center" style={{ color: primaryColor }}>
+              Shop by Product Group
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+              {categories.map((category) => (
+                <Link
+                  key={category.id}
+                  href={`/products?category=${category.slug}`}
+                  className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition-shadow"
+                >
+                  {category.icon && (
+                    <div className="text-4xl mb-3">{category.icon}</div>
+                  )}
+                  <h3 className="font-semibold" style={{ color: primaryColor }}>
+                    {category.name}
+                  </h3>
+                  {category.description && (
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                      {category.description}
+                    </p>
+                  )}
+                </Link>
+              ))}
             </div>
           </div>
         </section>
       )}
 
-      {/* Store Hours */}
-      {settings.openingHours && (
-        <section className="container mx-auto px-4 py-16">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 text-center" style={{ color: primaryColor }}>
-              Store Hours
-            </h2>
-            <div 
-              className="p-6 rounded-lg"
-              style={{ backgroundColor: secondaryColor }}
-            >
-              <pre className="whitespace-pre-wrap font-sans" style={{ color: primaryColor }}>
-                {settings.openingHours}
-              </pre>
+      {/* Why Choose Us Section */}
+      <section className="container mx-auto px-4 py-12">
+        <h2 className="text-3xl font-bold mb-8 text-center" style={{ color: primaryColor }}>
+          Why Choose Us
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[
+            {
+              title: 'Established Business',
+              description: settings.aboutText ? settings.aboutText.substring(0, 100) + '...' : 'With years of experience, we bring expertise to every order.',
+              icon: '🏢',
+            },
+            {
+              title: 'Product Experts',
+              description: 'Have a question? Our Product Experts are here to help!',
+              icon: '👥',
+            },
+            {
+              title: 'Large Inventory',
+              description: 'We stock high quality products ready to ship.',
+              icon: '📦',
+            },
+            {
+              title: 'Fast Shipping',
+              description: 'Get your products faster with quick shipping.',
+              icon: '🚚',
+            },
+          ].map((feature, index) => (
+            <div key={index} className="text-center">
+              <div className="text-5xl mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-semibold mb-2" style={{ color: primaryColor }}>
+                {feature.title}
+              </h3>
+              <p className="text-gray-600">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* About Section */}
+      {settings.aboutText && (
+        <section className="bg-gray-50 py-12">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl font-bold mb-6" style={{ color: primaryColor }}>
+                {settings.businessName || 'About Us'}
+              </h2>
+              <p className="text-lg leading-relaxed text-gray-700">
+                {settings.aboutText}
+              </p>
             </div>
           </div>
         </section>

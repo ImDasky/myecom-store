@@ -1,116 +1,39 @@
 import Link from 'next/link'
 import { getStoreSettings } from '@/lib/settings'
+import { prisma } from '@/lib/db'
 
 export async function Footer() {
   const settings = await getStoreSettings()
+  const categories = await prisma.category.findMany({
+    where: { isActive: true },
+    orderBy: { order: 'asc' },
+    take: 10,
+  })
 
   const primaryColor = settings.primaryColor || '#111827'
-  const secondaryColor = settings.secondaryColor || '#f3f4f6'
+  const accentColor = settings.secondaryColor || '#2563eb'
 
   return (
-    <footer 
-      className="border-t mt-auto"
-      style={{ 
-        backgroundColor: secondaryColor,
-        borderColor: primaryColor + '20'
-      }}
-    >
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-gray-900 text-white mt-auto">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Company */}
           <div>
-            {settings.logoUrl ? (
-              <img 
-                src={settings.logoUrl} 
-                alt={settings.businessName || 'Store'} 
-                className="h-8 w-auto mb-4"
-              />
-            ) : (
-              <h3 
-                className="text-xl font-bold mb-4"
-                style={{ color: primaryColor }}
-              >
-                {settings.businessName || 'My Store'}
-              </h3>
-            )}
+            <h3 className="text-lg font-bold mb-4">
+              {settings.businessName || 'My Store'}
+            </h3>
             {settings.aboutText && (
-              <p className="text-sm opacity-70" style={{ color: primaryColor }}>
+              <p className="text-sm text-gray-400 mb-4">
                 {settings.aboutText.substring(0, 150)}...
               </p>
             )}
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-4" style={{ color: primaryColor }}>Quick Links</h4>
-            <ul className="space-y-2">
-              {settings.showProductList && (
-                <li>
-                  <Link href="/products" className="text-sm hover:opacity-70" style={{ color: primaryColor }}>
-                    Products
-                  </Link>
-                </li>
-              )}
-              {settings.showBlog && (
-                <li>
-                  <Link href="/blog" className="text-sm hover:opacity-70" style={{ color: primaryColor }}>
-                    Blog
-                  </Link>
-                </li>
-              )}
-              {settings.showFAQ && (
-                <li>
-                  <Link href="/faq" className="text-sm hover:opacity-70" style={{ color: primaryColor }}>
-                    FAQ
-                  </Link>
-                </li>
-              )}
-              {settings.showContactPage && (
-                <li>
-                  <Link href="/contact" className="text-sm hover:opacity-70" style={{ color: primaryColor }}>
-                    Contact
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-4" style={{ color: primaryColor }}>Contact</h4>
-            <ul className="space-y-2 text-sm" style={{ color: primaryColor }}>
-              {settings.businessEmail && (
-                <li>
-                  <a href={`mailto:${settings.businessEmail}`} className="hover:opacity-70">
-                    {settings.businessEmail}
-                  </a>
-                </li>
-              )}
-              {settings.businessPhone && (
-                <li>
-                  <a href={`tel:${settings.businessPhone}`} className="hover:opacity-70">
-                    {settings.businessPhone}
-                  </a>
-                </li>
-              )}
-              {settings.businessAddress && (
-                <li className="opacity-70">
-                  {settings.businessAddress}
-                  {settings.businessCity && `, ${settings.businessCity}`}
-                  {settings.businessState && `, ${settings.businessState}`}
-                  {settings.businessZip && ` ${settings.businessZip}`}
-                </li>
-              )}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-4" style={{ color: primaryColor }}>Follow Us</h4>
             <div className="flex gap-4">
               {settings.facebookUrl && (
                 <a 
                   href={settings.facebookUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="hover:opacity-70"
-                  style={{ color: primaryColor }}
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
                   Facebook
                 </a>
@@ -120,8 +43,7 @@ export async function Footer() {
                   href={settings.instagramUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="hover:opacity-70"
-                  style={{ color: primaryColor }}
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
                   Instagram
                 </a>
@@ -131,32 +53,119 @@ export async function Footer() {
                   href={settings.twitterUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="hover:opacity-70"
-                  style={{ color: primaryColor }}
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
                   Twitter
                 </a>
               )}
-              {settings.tiktokUrl && (
-                <a 
-                  href={settings.tiktokUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:opacity-70"
-                  style={{ color: primaryColor }}
-                >
-                  TikTok
-                </a>
-              )}
             </div>
+          </div>
+
+          {/* Company Links */}
+          <div>
+            <h4 className="font-semibold mb-4">Company</h4>
+            <ul className="space-y-2 text-sm">
+              {settings.showHomepage && (
+                <li>
+                  <Link href="/" className="text-gray-400 hover:text-white transition-colors">
+                    About Us
+                  </Link>
+                </li>
+              )}
+              {settings.showContactPage && (
+                <li>
+                  <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
+                    Contact Us
+                  </Link>
+                </li>
+              )}
+              {settings.showLocationPage && (
+                <li>
+                  <Link href="/location" className="text-gray-400 hover:text-white transition-colors">
+                    Locations
+                  </Link>
+                </li>
+              )}
+              <li>
+                <Link href="/sitemap" className="text-gray-400 hover:text-white transition-colors">
+                  Site Map
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Customer Support */}
+          <div>
+            <h4 className="font-semibold mb-4">Customer Support</h4>
+            <ul className="space-y-2 text-sm">
+              {settings.showAccountArea && (
+                <li>
+                  <Link href="/auth/register" className="text-gray-400 hover:text-white transition-colors">
+                    Register
+                  </Link>
+                </li>
+              )}
+              {settings.showAccountArea && (
+                <li>
+                  <Link href="/account" className="text-gray-400 hover:text-white transition-colors">
+                    My Account
+                  </Link>
+                </li>
+              )}
+              <li>
+                <Link href="/policies/cancellation" className="text-gray-400 hover:text-white transition-colors">
+                  Cancellation Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/policies/returns" className="text-gray-400 hover:text-white transition-colors">
+                  Return Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/policies/warranty" className="text-gray-400 hover:text-white transition-colors">
+                  Limited Warranty
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Shop */}
+          <div>
+            <h4 className="font-semibold mb-4">Shop</h4>
+            <ul className="space-y-2 text-sm">
+              {categories.slice(0, 6).map((category) => (
+                <li key={category.id}>
+                  <Link 
+                    href={`/products?category=${category.slug}`}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+              {settings.showProductList && (
+                <li>
+                  <Link href="/products" className="text-gray-400 hover:text-white transition-colors font-semibold">
+                    View All Products
+                  </Link>
+                </li>
+              )}
+            </ul>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t text-center text-sm opacity-70" style={{ 
-          borderColor: primaryColor + '20',
-          color: primaryColor 
-        }}>
-          © {new Date().getFullYear()} {settings.businessName || 'My Store'}. All rights reserved.
+        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
+          <p>Copyright © {new Date().getFullYear()} {settings.businessName || 'My Store'}. All rights reserved.</p>
+          <div className="mt-2 space-x-4">
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              Privacy Policy
+            </Link>
+            <span>|</span>
+            <Link href="/terms" className="hover:text-white transition-colors">
+              Terms of Use
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

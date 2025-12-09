@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { search?: string }
+  searchParams: { search?: string; category?: string }
 }) {
   const settings = await getStoreSettings()
 
@@ -18,8 +18,21 @@ export default async function ProductsPage({
   }
 
   const search = searchParams.search || ''
+  const categorySlug = searchParams.category || ''
+  
+  // Get category if filtering by category
+  let categoryId: number | undefined
+  if (categorySlug) {
+    const category = await prisma.category.findUnique({
+      where: { slug: categorySlug },
+      select: { id: true },
+    })
+    categoryId = category?.id
+  }
+
   const where: any = {
     isActive: true,
+    ...(categoryId && { categoryId }),
     ...(search && {
       OR: [
         { name: { contains: search } },
@@ -28,14 +41,20 @@ export default async function ProductsPage({
     }),
   }
 
-  const products = await prisma.product.findMany({
-    where,
-    include: { variants: { where: { isActive: true } } },
-    orderBy: { createdAt: 'desc' },
-  })
+  const [products, categories] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      include: { variants: { where: { isActive: true } }, category: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.category.findMany({
+      where: { isActive: true },
+      orderBy: { order: 'asc' },
+    }),
+  ])
 
   const primaryColor = settings.primaryColor || '#111827'
-  const secondaryColor = settings.secondaryColor || '#f3f4f6'
+  const accentColor = settings.secondaryColor || '#2563eb'
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -43,6 +62,36 @@ export default async function ProductsPage({
         <h1 className="text-4xl font-bold mb-4" style={{ color: primaryColor }}>
           Products
         </h1>
+        {categories.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            <Link
+              href="/products"
+              className={`px-4 py-2 rounded-lg border transition-colors ${
+                !categorySlug
+                  ? 'text-white'
+                  : 'bg-white hover:bg-gray-50'
+              }`}
+              style={!categorySlug ? { backgroundColor: accentColor } : { borderColor: primaryColor + '40', color: primaryColor }}
+            >
+              All Products
+            </Link>
+            {categories.map((category) => (
+              <Link
+                key={category.id}
+                href={`/products?category=${category.slug}`}
+                className={`px-4 py-2 rounded-lg border transition-colors ${
+                  categorySlug === category.slug
+                    ? 'text-white'
+                    : 'bg-white hover:bg-gray-50'
+                }`}
+                style={categorySlug === category.slug ? { backgroundColor: accentColor } : { borderColor: primaryColor + '40', color: primaryColor }}
+              >
+                {category.icon && <span className="mr-2">{category.icon}</span>}
+                {category.name}
+              </Link>
+            ))}
+          </div>
+        )}
         {settings.showSearch && (
           <form method="get" className="max-w-md">
             <input
