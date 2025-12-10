@@ -86,6 +86,14 @@ export async function POST(request: NextRequest) {
     const shipping = await calculateShipping(subtotalCents)
     const totalCents = subtotalCents + shipping.amountCents
 
+    // Stripe requires a minimum of $0.50
+    if (totalCents < 50) {
+      return NextResponse.json(
+        { error: 'Order total must be at least $0.50. Please add more items to your cart.' },
+        { status: 400 }
+      )
+    }
+
     if (shipping.amountCents > 0) {
       lineItems.push({
         price_data: {
