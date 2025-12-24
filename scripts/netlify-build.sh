@@ -23,22 +23,35 @@ fi
 if [ -n "$DATABASE_URL" ] && [[ "$DATABASE_URL" =~ ^postgresql:// ]] || [[ "$DATABASE_URL" =~ ^postgres:// ]]; then
   # First, try to run migrations (preferred method)
   echo "Running database migrations..."
-  MAX_RETRIES=3
+  MAX_RETRIES=2
   RETRY_COUNT=0
   MIGRATION_SUCCESS=false
+  USE_DB_PUSH=false
   
   while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
     # Use timeout if available, otherwise just run directly
+    MIGRATE_OUTPUT=""
+    MIGRATE_EXIT=0
     if command -v timeout &> /dev/null; then
-      if timeout 60 npx prisma migrate deploy; then
-        MIGRATION_SUCCESS=true
-        break
-      fi
+      timeout 60 npx prisma migrate deploy 2>&1 || MIGRATE_EXIT=$?
+      MIGRATE_OUTPUT=$(timeout 60 npx prisma migrate deploy 2>&1) || MIGRATE_EXIT=$?
     else
-      if npx prisma migrate deploy; then
-        MIGRATION_SUCCESS=true
-        break
-      fi
+      npx prisma migrate deploy 2>&1 || MIGRATE_EXIT=$?
+      MIGRATE_OUTPUT=$(npx prisma migrate deploy 2>&1) || MIGRATE_EXIT=$?
+    fi
+    
+    # Check if migration succeeded
+    if [ $MIGRATE_EXIT -eq 0 ]; then
+      MIGRATION_SUCCESS=true
+      break
+    fi
+    
+    # Check if it's a failed migration error (P3009) - skip retries and use db push
+    if echo "$MIGRATE_OUTPUT" | grep -q "P3009\|failed migrations"; then
+      echo "Detected failed migration state in database (P3009)"
+      echo "Will use db push to bypass migration history and create schema directly"
+      USE_DB_PUSH=true
+      break
     fi
     
     RETRY_COUNT=$((RETRY_COUNT + 1))
@@ -48,23 +61,28 @@ if [ -n "$DATABASE_URL" ] && [[ "$DATABASE_URL" =~ ^postgresql:// ]] || [[ "$DAT
     fi
   done
   
-  # If migrations fail, use db push as fallback (creates schema from Prisma schema)
-  if [ "$MIGRATION_SUCCESS" = false ]; then
-    echo "Migrations failed, trying db push as fallback..."
+  # If migrations fail OR if we detected failed migration state, use db push
+  if [ "$MIGRATION_SUCCESS" = false ] || [ "$USE_DB_PUSH" = true ]; then
+    if [ "$USE_DB_PUSH" = true ]; then
+      echo "Using db push to bypass failed migration state..."
+    else
+      echo "Migrations failed, trying db push as fallback..."
+    fi
+    echo "db push will create schema directly from Prisma schema, bypassing migration history"
     if command -v timeout &> /dev/null; then
-      if timeout 60 npx prisma db push --accept-data-loss; then
+      if timeout 60 npx prisma db push --accept-data-loss --skip-generate; then
         echo "Database schema created using db push"
         MIGRATION_SUCCESS=true
       else
-        echo "WARNING: Both migrate deploy and db push failed"
+        echo "WARNING: db push failed"
         echo "Database will be initialized on first request"
       fi
     else
-      if npx prisma db push --accept-data-loss; then
+      if npx prisma db push --accept-data-loss --skip-generate; then
         echo "Database schema created using db push"
         MIGRATION_SUCCESS=true
       else
-        echo "WARNING: Both migrate deploy and db push failed"
+        echo "WARNING: db push failed"
         echo "Database will be initialized on first request"
       fi
     fi

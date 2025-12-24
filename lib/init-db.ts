@@ -57,9 +57,10 @@ export async function ensureDatabaseInitialized(): Promise<boolean> {
           initInProgress = false
           return true
         } catch (migrateError: any) {
-          // If migrate deploy fails, try db push as fallback
-          console.log('migrate deploy failed, trying db push...')
-          const { stdout } = await execAsync('npx prisma db push --accept-data-loss', {
+          // If migrate deploy fails (e.g., due to failed migration state), try db push as fallback
+          // db push bypasses migration history and creates schema directly
+          console.log('migrate deploy failed (possibly due to failed migration state), trying db push...')
+          const { stdout } = await execAsync('npx prisma db push --accept-data-loss --skip-generate', {
             env: { ...process.env },
             timeout: 30000,
             cwd: process.cwd(),

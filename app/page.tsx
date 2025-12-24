@@ -61,8 +61,8 @@ export default async function HomePage() {
           <div className="flex flex-wrap justify-center gap-6">
             {topProducts.map((product, index) => {
               const images = product.images ? JSON.parse(product.images) : []
-              const minPrice = product.variants.length > 0 && product.variants.some(v => v.price)
-                ? Math.min(...product.variants.filter(v => v.price).map(v => v.price!))
+              const minPrice = product.variants.length > 0 && product.variants.some((v: any) => v.price)
+                ? Math.min(...product.variants.filter((v: any) => v.price).map((v: any) => v.price!))
                 : product.basePrice
 
               return (
