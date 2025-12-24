@@ -36,6 +36,27 @@ The project automatically uses `NETLIFY_DATABASE_URL` if `DATABASE_URL` is not s
 - ✅ Works automatically with Netlify's Neon integration
 - ✅ Falls back gracefully if database isn't ready
 
+### Create Admin User
+
+After deployment, create your first admin user:
+
+**Option 1: Via API endpoint (easiest for Netlify)**
+```bash
+curl -X POST "https://your-site.netlify.app/api/setup-admin" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"your-secure-password"}'
+```
+
+**Option 2: Use create-admin.js script locally**
+```bash
+DATABASE_URL="your-database-url" node create-admin.js admin@example.com your-password
+```
+
+**Option 3: Via Prisma Studio**
+1. Run `DATABASE_URL="your-db-url" npx prisma studio`
+2. Navigate to User table
+3. Create user with `isAdmin: true`
+
 ### Manual Migration (if needed)
 
 If migrations fail during build, you can manually trigger them:
