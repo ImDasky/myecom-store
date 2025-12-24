@@ -7,7 +7,9 @@
 
 [build.environment]
   NODE_VERSION = "18"
-  # Map Netlify's DATABASE_URL to DATABASE_URL for Prisma
+  # Map Netlify's DATABASE_URL to DATABASE_URL for Prisma (build time)
+  # Note: For runtime, DATABASE_URL is automatically set from NETLIFY_DATABASE_URL
+  # in lib/db.ts, so no manual environment variable setup is needed
   DATABASE_URL = "$NETLIFY_DATABASE_URL"
 
 # Ensure environment variables are available to functions

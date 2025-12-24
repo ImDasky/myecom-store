@@ -1,4 +1,5 @@
 import { prisma } from './db'
+import { ensureDatabaseInitialized } from './init-db'
 
 let settingsCache: any = null
 let cacheTime = 0
@@ -6,6 +7,9 @@ const CACHE_TTL = 60000 // 1 minute
 
 export async function getStoreSettings() {
   try {
+    // Ensure database is initialized on first access
+    await ensureDatabaseInitialized()
+
     const now = Date.now()
     if (settingsCache && now - cacheTime < CACHE_TTL) {
       return settingsCache

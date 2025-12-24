@@ -17,12 +17,19 @@ export default async function HomePage() {
   }
 
   // Get top selling products (for now, just get recent products)
-  const topProducts = await prisma.product.findMany({
-    where: { isActive: true },
-    include: { variants: { where: { isActive: true } } },
-    take: 5,
-    orderBy: { createdAt: 'desc' },
-  })
+  // Gracefully handle if Product table doesn't exist yet
+  let topProducts: any[] = []
+  try {
+    topProducts = await prisma.product.findMany({
+      where: { isActive: true },
+      include: { variants: { where: { isActive: true } } },
+      take: 5,
+      orderBy: { createdAt: 'desc' },
+    })
+  } catch (error: any) {
+    // Product table might not exist yet if migrations haven't run
+    console.warn('Products table not available:', error.message)
+  }
 
   // Get active categories (gracefully handle if table doesn't exist yet)
   let categories: Array<{ id: number; name: string; slug: string; description: string | null; icon: string | null; order: number; isActive: boolean }> = []

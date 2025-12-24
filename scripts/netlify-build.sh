@@ -20,16 +20,33 @@ fi
 
 # Verify DATABASE_URL starts with postgresql:// or postgres://
 if [ -n "$DATABASE_URL" ] && [[ "$DATABASE_URL" =~ ^postgresql:// ]] || [[ "$DATABASE_URL" =~ ^postgres:// ]]; then
-  # Run migrations
+  # Run migrations with retries (database might be slow to connect)
   echo "Running database migrations..."
-  npx prisma migrate deploy || {
-    echo "WARNING: Migration failed, but continuing with build..."
-    echo "Migrations can be run manually via API endpoint /api/migrate after deployment"
-  }
+  MAX_RETRIES=3
+  RETRY_COUNT=0
+  MIGRATION_SUCCESS=false
+  
+  while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+    if npx prisma migrate deploy; then
+      MIGRATION_SUCCESS=true
+      break
+    else
+      RETRY_COUNT=$((RETRY_COUNT + 1))
+      if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+        echo "Migration attempt $RETRY_COUNT failed, retrying in 5 seconds..."
+        sleep 5
+      fi
+    fi
+  done
+  
+  if [ "$MIGRATION_SUCCESS" = false ]; then
+    echo "WARNING: Migration failed after $MAX_RETRIES attempts, but continuing with build..."
+    echo "Migrations will be attempted automatically on first request"
+  fi
 else
   echo "WARNING: DATABASE_URL is not set or invalid. Skipping migrations."
   echo "DATABASE_URL preview: ${DATABASE_URL:0:30}..."
-  echo "Migrations can be run manually via API endpoint /api/migrate after deployment"
+  echo "Migrations will be attempted automatically on first request"
 fi
 
 # Build the application
