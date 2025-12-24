@@ -33,10 +33,8 @@ if [ -n "$DATABASE_URL" ] && [[ "$DATABASE_URL" =~ ^postgresql:// ]] || [[ "$DAT
     MIGRATE_OUTPUT=""
     MIGRATE_EXIT=0
     if command -v timeout &> /dev/null; then
-      timeout 60 npx prisma migrate deploy 2>&1 || MIGRATE_EXIT=$?
       MIGRATE_OUTPUT=$(timeout 60 npx prisma migrate deploy 2>&1) || MIGRATE_EXIT=$?
     else
-      npx prisma migrate deploy 2>&1 || MIGRATE_EXIT=$?
       MIGRATE_OUTPUT=$(npx prisma migrate deploy 2>&1) || MIGRATE_EXIT=$?
     fi
     
