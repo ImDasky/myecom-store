@@ -1,0 +1,10 @@
+# Cloudflare Pages ignore file
+# Exclude build cache and other unnecessary files
+
+.next/cache/
+.next/server/chunks/
+node_modules/
+.git/
+*.log
+.DS_Store
+

@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "npx prisma generate && next build",
+    "build:cloudflare": "npx prisma generate && next build && npm run postbuild:cloudflare",
+    "postbuild:cloudflare": "rm -rf .next/cache .next/server/chunks",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",

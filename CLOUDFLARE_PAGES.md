@@ -17,10 +17,12 @@ In your Cloudflare Pages dashboard:
 
 Set these in Cloudflare Pages:
 
-- **Build command**: `npm run build`
+- **Build command**: `npm run build:cloudflare`
 - **Build output directory**: `.next`
 - **Root directory**: `/` (or leave empty)
 - **Deploy command**: (leave empty - Cloudflare Pages handles this automatically)
+
+**Important**: The `build:cloudflare` script removes the cache directory after build to avoid Cloudflare's 25 MiB file size limit.
 
 ## Environment Variables
 
