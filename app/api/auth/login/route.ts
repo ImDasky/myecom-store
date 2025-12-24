@@ -61,9 +61,24 @@ export async function POST(request: NextRequest) {
     return response
   } catch (error: any) {
     console.error('Login error:', error)
-    console.error('Error details:', error.message, error.stack)
+    console.error('Error message:', error?.message)
+    console.error('Error stack:', error?.stack)
+    console.error('Error code:', error?.code)
+    console.error('Error name:', error?.name)
+    
+    // Return more detailed error in development, generic in production
+    const errorMessage = process.env.NODE_ENV === 'development' 
+      ? error?.message || 'Unknown error'
+      : 'Internal server error'
+    
     return NextResponse.json(
-      { error: 'Internal server error', details: process.env.NODE_ENV === 'development' ? error.message : undefined },
+      { 
+        error: errorMessage,
+        ...(process.env.NODE_ENV === 'development' && { 
+          stack: error?.stack,
+          code: error?.code 
+        })
+      },
       { status: 500 }
     )
   }

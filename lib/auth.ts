@@ -22,9 +22,11 @@ export async function createSession(userId: number) {
     })
   } catch (error: any) {
     // In some serverless environments, cookies() might throw
-    // Log but don't fail - the response will still be returned
-    console.error('Error setting session cookie:', error.message)
-    throw error // Re-throw so caller knows it failed
+    console.error('Error setting session cookie via cookies():', error?.message)
+    console.error('Cookie error type:', error?.name)
+    console.error('Cookie error stack:', error?.stack)
+    // Re-throw so caller can handle it
+    throw error
   }
 }
 
