@@ -32,9 +32,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    await createSession(user.id)
-
-    return NextResponse.json({ 
+    // Create response first
+    const response = NextResponse.json({ 
       success: true,
       user: {
         id: user.id,
@@ -42,10 +41,29 @@ export async function POST(request: NextRequest) {
         isAdmin: user.isAdmin,
       }
     })
-  } catch (error) {
+
+    // Set session cookie on the response
+    // Try using cookies() helper first, fallback to direct cookie setting
+    try {
+      await createSession(user.id)
+    } catch (cookieError: any) {
+      console.error('Cookie error (trying direct method):', cookieError.message)
+      // Fallback: set cookie directly on response
+      response.cookies.set('session', user.id.toString(), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: '/',
+      })
+    }
+
+    return response
+  } catch (error: any) {
     console.error('Login error:', error)
+    console.error('Error details:', error.message, error.stack)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: process.env.NODE_ENV === 'development' ? error.message : undefined },
       { status: 500 }
     )
   }

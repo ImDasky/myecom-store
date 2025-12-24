@@ -11,13 +11,21 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 export async function createSession(userId: number) {
-  const cookieStore = await cookies()
-  cookieStore.set('session', userId.toString(), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  })
+  try {
+    const cookieStore = await cookies()
+    cookieStore.set('session', userId.toString(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    })
+  } catch (error: any) {
+    // In some serverless environments, cookies() might throw
+    // Log but don't fail - the response will still be returned
+    console.error('Error setting session cookie:', error.message)
+    throw error // Re-throw so caller knows it failed
+  }
 }
 
 export async function getSession(): Promise<number | null> {
