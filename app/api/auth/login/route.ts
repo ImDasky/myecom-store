@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create response first
+    // Create response with user data
     const response = NextResponse.json({ 
       success: true,
       user: {
@@ -42,20 +42,26 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Set session cookie on the response
-    // Try using cookies() helper first, fallback to direct cookie setting
+    // Set session cookie - try multiple methods for compatibility
     try {
+      // Method 1: Use cookies() helper (preferred for Next.js App Router)
       await createSession(user.id)
     } catch (cookieError: any) {
-      console.error('Cookie error (trying direct method):', cookieError.message)
-      // Fallback: set cookie directly on response
-      response.cookies.set('session', user.id.toString(), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7, // 7 days
-        path: '/',
-      })
+      console.error('Cookie helper failed, using direct method:', cookieError.message)
+      try {
+        // Method 2: Set cookie directly on response object
+        response.cookies.set('session', user.id.toString(), {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          path: '/',
+        })
+      } catch (directError: any) {
+        console.error('Direct cookie setting also failed:', directError.message)
+        // If both fail, log but don't fail the request
+        // The user can still use the app, just won't have a session cookie
+      }
     }
 
     return response
