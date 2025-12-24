@@ -7,8 +7,53 @@ export const dynamic = 'force-dynamic'
 /**
  * Create the first admin user (only works if no admin users exist)
  * This is a one-time setup endpoint for fresh deployments
+ * 
+ * GET: Shows instructions or creates admin via query params
+ * POST: Creates admin via JSON body
  */
+export async function GET(request: NextRequest) {
+  const email = request.nextUrl.searchParams.get('email')
+  const password = request.nextUrl.searchParams.get('password')
+
+  // If email and password are provided, try to create admin
+  if (email && password) {
+    return await createAdminUser(email, password)
+  }
+
+  // Otherwise show instructions
+  return NextResponse.json({
+    message: 'Setup Admin Endpoint',
+    instructions: {
+      method1: 'Use POST with JSON body: { "email": "admin@example.com", "password": "your-password" }',
+      method2: 'Use GET with query params: ?email=admin@example.com&password=your-password',
+      curlExample: 'curl -X POST "https://your-site.netlify.app/api/setup-admin" -H "Content-Type: application/json" -d \'{"email":"admin@example.com","password":"your-password"}\'',
+      note: 'This endpoint only works if no admin users exist yet (security feature)'
+    }
+  }, { status: 200 })
+}
+
 export async function POST(request: NextRequest) {
+  try {
+    const { email, password } = await request.json()
+
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: 'Email and password are required' },
+        { status: 400 }
+      )
+    }
+
+    return await createAdminUser(email, password)
+  } catch (error: any) {
+    console.error('Setup admin error:', error)
+    return NextResponse.json(
+      { error: error.message || 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+async function createAdminUser(email: string, password: string) {
   try {
     // Check if any admin users already exist
     const existingAdmin = await prisma.user.findFirst({
@@ -21,8 +66,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
-
-    const { email, password } = await request.json()
 
     if (!email || !password) {
       return NextResponse.json(
@@ -70,7 +113,7 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error: any) {
-    console.error('Setup admin error:', error)
+    console.error('Create admin user error:', error)
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
       { status: 500 }
