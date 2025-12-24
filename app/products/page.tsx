@@ -48,18 +48,30 @@ export default async function ProductsPage({
     }),
   }
 
-  const [products, categoriesResult] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      include: { variants: { where: { isActive: true } }, category: true },
-      orderBy: { createdAt: 'desc' },
-    }),
-    prisma.category.findMany({
-      where: { isActive: true },
-      orderBy: { order: 'asc' },
-    }).catch(() => []), // Gracefully handle if table doesn't exist yet
-  ])
-  const categories = categoriesResult || []
+  // Get products and categories (gracefully handle if tables don't exist yet)
+  let products: any[] = []
+  let categories: any[] = []
+  
+  try {
+    const [productsResult, categoriesResult] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        include: { variants: { where: { isActive: true } }, category: true },
+        orderBy: { createdAt: 'desc' },
+      }).catch(() => []), // Gracefully handle if table doesn't exist yet
+      prisma.category.findMany({
+        where: { isActive: true },
+        orderBy: { order: 'asc' },
+      }).catch(() => []), // Gracefully handle if table doesn't exist yet
+    ])
+    products = productsResult || []
+    categories = categoriesResult || []
+  } catch (error: any) {
+    // Tables might not exist yet if migrations haven't run
+    console.warn('Products or categories table not available:', error.message)
+    products = []
+    categories = []
+  }
 
   const primaryColor = settings.primaryColor || '#111827'
   const accentColor = settings.secondaryColor || '#2563eb'
@@ -122,11 +134,11 @@ export default async function ProductsPage({
         <div className="flex flex-wrap justify-center gap-6">
           {products.map((product) => {
             const images = product.images ? JSON.parse(product.images) : []
-            const minPrice = product.variants.length > 0 && product.variants.some(v => v.price)
-              ? Math.min(...product.variants.filter(v => v.price).map(v => v.price!))
+            const minPrice = product.variants.length > 0 && product.variants.some((v: any) => v.price)
+              ? Math.min(...product.variants.filter((v: any) => v.price).map((v: any) => v.price!))
               : product.basePrice
-            const maxPrice = product.variants.length > 0 && product.variants.some(v => v.price)
-              ? Math.max(...product.variants.filter(v => v.price).map(v => v.price!))
+            const maxPrice = product.variants.length > 0 && product.variants.some((v: any) => v.price)
+              ? Math.max(...product.variants.filter((v: any) => v.price).map((v: any) => v.price!))
               : product.basePrice
 
             return (

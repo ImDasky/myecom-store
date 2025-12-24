@@ -12,10 +12,19 @@ export default async function ProductPage({
   params: { slug: string }
 }) {
   const settings = await getStoreSettings()
-  const product = await prisma.product.findUnique({
-    where: { slug: params.slug },
-    include: { variants: { where: { isActive: true }, orderBy: { name: 'asc' } } },
-  })
+  
+  // Get product (gracefully handle if table doesn't exist yet)
+  let product: any = null
+  try {
+    product = await prisma.product.findUnique({
+      where: { slug: params.slug },
+      include: { variants: { where: { isActive: true }, orderBy: { name: 'asc' } } },
+    })
+  } catch (error: any) {
+    // Product table might not exist yet if migrations haven't run
+    console.warn('Products table not available:', error.message)
+    notFound()
+  }
 
   if (!product || !product.isActive) {
     notFound()
@@ -65,7 +74,7 @@ export default async function ProductPage({
           </h1>
           <p className="text-3xl font-semibold mb-8 text-black">
             {product.variants.length > 0
-              ? `${formatPrice(Math.min(...product.variants.map(v => v.price || product.basePrice)))} - ${formatPrice(Math.max(...product.variants.map(v => v.price || product.basePrice)))}`
+              ? `${formatPrice(Math.min(...product.variants.map((v: any) => v.price || product.basePrice)))} - ${formatPrice(Math.max(...product.variants.map((v: any) => v.price || product.basePrice)))}`
               : formatPrice(product.basePrice)
             }
           </p>
@@ -87,7 +96,7 @@ export default async function ProductPage({
                 Options
               </h2>
               <div className="space-y-4">
-                {product.variants.map((variant) => (
+                {product.variants.map((variant: any) => (
                   <div 
                     key={variant.id}
                     className="p-5 border-2 border-gray-200 rounded-xl bg-white hover:border-gray-300 hover:shadow-md transition-all"
